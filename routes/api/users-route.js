@@ -13,7 +13,6 @@ router
   .delete(usersController.deleteUser);
 
 // /api/users/:userId/friends/:friendId
-router.route('/:userId/friends/').post(usersController.addFriend)
 
-router.route('/:userId/friends/:friendId').delete(usersController.removeFriend);
+router.route('/:userId/friends/:friendId').post(usersController.addFriend).delete(usersController.removeFriend);
 module.exports = router;

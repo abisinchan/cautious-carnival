@@ -77,6 +77,9 @@ const usersController = {
   async addFriend(req, res) {
     const userId = req.params.userId;
     const friendId = req.params.friendId;
+
+    console.log('userId:', userId);//test
+    console.log('friendId:', friendId);//test
   
     try {
       const user = await User.findByIdAndUpdate(
@@ -85,7 +88,7 @@ const usersController = {
         { new: true }
       ).populate('friends');
   
-      console.log(user); // test to see the updated user object
+      console.log('updated user:', user); // test to see the updated user object
   
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -102,6 +105,7 @@ const usersController = {
   async removeFriend(req, res) {
     const userId = req.params.userId;
     const friendId = req.params.friendId;
+
 
     try {
       const user = await User.findByIdAndUpdate(

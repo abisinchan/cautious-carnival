@@ -73,7 +73,7 @@ const thoughtsController = {
     }
   },
 
-  // DELETE to remove a thought by its _id
+
 // DELETE to remove a thought by its _id
 async deleteThought(req, res) {
   const { id } = req.params;
@@ -85,7 +85,7 @@ async deleteThought(req, res) {
       return res.status(404).json({ message: 'Thought not found' });
     }
 
-    // Remove the thought's _id from the associated user's thoughts array field
+    //Remove the thought's _id from the associated user's thoughts array field
     const user = await User.findOne({ username: deletedThought.username });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
