@@ -1,5 +1,5 @@
-const User = require('./user');
-const Thought = require('./thought');
+
+const {User,Thought} = require('../models');
 
 const usersController = {
   // GET all users
@@ -15,10 +15,14 @@ const usersController = {
   // GET a single user by its _id and populate thought and friend data
   async getSingleUser(req, res) {
     try {
-      const user = await User.findById(req.params.id).populate('thoughts friends');
+      const user = await User.findById(req.params.id)
+        .populate('thoughts') // Populate the thoughts array
+        .populate('friends'); // Populate the friends array
+
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
+
       res.json(user);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching the user' });
@@ -70,24 +74,26 @@ const usersController = {
     }
   },
 
-  // POST to add a friend to a user's friend list
   async addFriend(req, res) {
     const userId = req.params.userId;
     const friendId = req.params.friendId;
-
+  
     try {
       const user = await User.findByIdAndUpdate(
         userId,
         { $addToSet: { friends: friendId } },
         { new: true }
       ).populate('friends');
-
+  
+      console.log(user); // test to see the updated user object
+  
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-
+  
       res.json(user);
     } catch (error) {
+      console.error(error);//test to see the updated user object
       res.status(500).json({ message: 'Error adding a friend' });
     }
   },

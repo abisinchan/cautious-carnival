@@ -1,4 +1,4 @@
-const Thought = require('./thought');
+const {User,Thought} = require('../models');
 
 const thoughtsController = {
   // GET all thoughts
@@ -28,15 +28,15 @@ const thoughtsController = {
   // POST to create a new thought
   async createThought(req, res) {
     const { thoughtText, username, userId } = req.body;
-
+  
     try {
       const newThought = new Thought({
         thoughtText,
         username,
       });
-
+  
       const savedThought = await newThought.save();
-
+  
       // Push the created thought's _id to the associated user's thoughts array field
       const user = await User.findById(userId);
       if (!user) {
@@ -44,10 +44,10 @@ const thoughtsController = {
       }
       user.thoughts.push(savedThought._id);
       await user.save();
-
+  
       res.status(201).json(savedThought);
     } catch (err) {
-      res.status(500).json({ message: 'Error creating the thought' });
+      res.status(500).json({ message: 'Error creating the thought', error: err.message });
     }
   },
 
@@ -74,30 +74,35 @@ const thoughtsController = {
   },
 
   // DELETE to remove a thought by its _id
-  async deleteThought(req, res) {
-    const { id } = req.params;
+// DELETE to remove a thought by its _id
+async deleteThought(req, res) {
+  const { id } = req.params;
 
-    try {
-      const deletedThought = await Thought.findByIdAndDelete(id);
+  try {
+    const deletedThought = await Thought.findByIdAndDelete(id);
 
-      if (!deletedThought) {
-        return res.status(404).json({ message: 'Thought not found' });
-      }
-
-      // Remove the thought's _id from the associated user's thoughts array field
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      user.thoughts.pull(id);
-      await user.save();
-
-      res.json(deletedThought);
-    } catch (err) {
-      res.status(500).json({ message: 'Error deleting the thought' });
+    if (!deletedThought) {
+      return res.status(404).json({ message: 'Thought not found' });
     }
-  },
 
+    // Remove the thought's _id from the associated user's thoughts array field
+    const user = await User.findOne({ username: deletedThought.username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const index = user.thoughts.indexOf(id);
+    if (index !== -1) {
+      user.thoughts.splice(index, 1);
+      await user.save();
+    }
+
+    res.json(deletedThought);
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting the thought' });
+  }
+},
+  
   // POST to create a reaction stored in a single thought's reactions array field
   async createReaction(req, res) {
     const { thoughtId } = req.params;

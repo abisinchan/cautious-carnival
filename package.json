@@ -1,15 +1,23 @@
 {
-  "name": "28-Stu_Mini-Project",
-  "version": "1.0.1",
-  "description": "Mongoose back-end project - Main",
+  "name": "cautious-carnival",
+  "version": "1.0.0",
+  "description": "Social-Network-Api",
   "main": "index.js",
-  "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
-    "seed": "node utils/seed",
-    "heroku-postbuild": "node utils/seed.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abisinchan/cautious-carnival.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abisinchan/cautious-carnival/issues"
+  },
+  "homepage": "https://github.com/abisinchan/cautious-carnival#readme",
   "dependencies": {
     "express": "^4.17.1",
     "mongoose": "^7.0.2"
